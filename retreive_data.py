@@ -8,7 +8,6 @@ from numpy import zeros
 class ExcelReader:
 
 	def __init__(self):
-	
 		self.root = Tk()
 		self.root.withdraw()
 		#requests the location of the excel file
@@ -19,10 +18,6 @@ class ExcelReader:
 		print "Collecting specified matrices from excel database...\n"
 		
 		self.wkbk = open_workbook(self.filename)
-
-		# self.identify_sheet()
-
-		# self.extract_values()
 		
 		
 	def identify_sheet(self, segment, type):
@@ -30,10 +25,10 @@ class ExcelReader:
 		self.sheet_name = "Seg{0}{1}s".format(segment,type)
 		
 		wkst = self.wkbk.sheet_by_name(self.sheet_name)
-		
 
 		return wkst
 		
+
 	def extract_values(self, target_sheet, subject_list, gate_list):
 		#using the identified worksheet object, and the initial setup values: subject_list & gate_list - creates a dictionary of the confusion matrix values
 		self.confusion_dict = defaultdict(lambda : defaultdict(dict))
@@ -69,6 +64,7 @@ class ExcelReader:
 	
 		return self.confusion_dict
 				
+
 	def get_row_index(self, item_number, item_row, target_sheet, col):
 		while True:
 			self.cell_contents = target_sheet.cell(item_row, col)
@@ -90,22 +86,6 @@ class ExcelReader:
 				else:
 					confusion_matrix[i,j] = int(float(str(target_sheet.cell(i+6, j+4))[7:-1]))
 
-					
-				
 		return confusion_matrix
-		
-		
-		
-		
-		
-		
-		
-
-if __name__ == '__main__':
-	Open_Excel()	
-		
-		
-		
-		
-		
+	
 		

@@ -4,10 +4,6 @@ from os.path import join
 from workshop import Workbench
 from retreive_data import ExcelReader
 
-#collect = __import__( 'retreive_data')
-
-
-
 
 class Edit_Values:
 
@@ -87,19 +83,7 @@ class Not_Main:
 
 		print "Enter initial setup commands\nPress [enter] to use default values, or submit commands and press [enter] when finished editing values\n"
 
-		# first_level = initial_values()
-		# first_level.get_input()
 		self.get_input()
-
-		# if self.subject_list == self.__subjects:
-		# 		self.subject_list == ["total"]
-
-		# if self.gate_list == self.__gates:
-		# 		self.gate_list == ["total"]
-	
-		#import module that extracts data from the confusion matrix excel file
-		# collect = __import__('retreive_data')
-		# open_excel = collect.open_excel()
 		
 		excel_reader = ExcelReader()
 
@@ -108,14 +92,10 @@ class Not_Main:
 		self.confusion_dict = excel_reader.extract_values(self.target_sheet, self.subject_list, self.gate_list)
 		
 		excel_reader.root.destroy()
-		#import module which acts as the "workbench" for specifying the necessary calculations
-		#workshop = __import__('workshop')
-		a = {'k':1}
-		#workbench = Workbench(self.confusion_dict)
-		workbench = Workbench(a)
-		
 
-		
+		#import module which acts as the "workbench" for specifying the necessary calculations
+		workbench = Workbench(self.confusion_dict)
+	
 		while True:
 			repeat = raw_input("Would you like to run any additional calculations?\nTo return to the initial setup menu, type 'return' and hit [enter]. To exit the program, type 'exit' [enter].\n")
 		
@@ -125,16 +105,7 @@ class Not_Main:
 				break
 			else:
 				print "You must enter a valid input."
-		
-		
-		
-	
-	
-#class initial_values(main):
 
-	#def __init__(self):
-		# self.edit = edit_values()
-		#pass
 
 	def get_input(self):
 		while self.command != "":
@@ -178,16 +149,6 @@ class Not_Main:
 			
 			print "Returned to initial setup menu.  If completed, press [enter]\n"
 					
-			
-	
-			
-
-
-		
-		
-			
-
-	
 
 
 Not_Main = Not_Main()

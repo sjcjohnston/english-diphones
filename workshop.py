@@ -21,21 +21,17 @@ class Workbench:
 		self.workbench()
 		
 
-
-	def new(self):
-		print self.var_all.get()
-
 	def construction(self):
 	
 		self.containment = {"vd":0,"vless":0,"stop":0,"fric":0,"aff":0,"glide":0,"liq":0,"nas":0,"lab":0,"dent":0,"alv":0,"pal":0,"vel":0,"glot":0}
-		print self.var_all.get()
+		# print self.var_all.get()
 		
 		while True:
 			#If using complete confusion matrix, set all field-values to "checked"
 			if self.var_all.get() == 1:
 				for feature in self.containment:
 					self.containment[feature] = 1
-				print self.containment
+				# print self.containment
 				break
 			if self.var_all_v == 1:
 				self.var_voiced = 1
@@ -73,14 +69,21 @@ class Workbench:
 			break
 		
 		
-		self.confusion_matrix, self.ti_condition = zeros(shape=(2,2)), 'voicing' if self.radio_var == "voicing" else 'unchecked'
-		self.confusion_matrix, self.ti_condition = zeros(shape=(7,6)), 'manner' if self.radio_var == "manner" else 'unchecked'
-		self.confusion_matrix, self.ti_condition = zeros(shape=(7,6)), 'place' if self.radio_var == "place" else 'unchecked'
+		print self.radio_var.get()
+
+		if self.radio_var.get() == "voicing":
+			self.confusion_matrix, self.ti_condition = zeros(shape=(2,2)), 'voicing' 
+		elif self.radio_var.get() == "manner":
+			self.confusion_matrix, self.ti_condition = zeros(shape=(6,7)), 'manner' 
+		elif self.radio_var.get() == "place":
+			self.confusion_matrix, self.ti_condition = zeros(shape=(6,7)), 'place'
+
+		print self.confusion_matrix, self.ti_condition
 		
 		for subject in self.confusion_dict:
-			#print subject
+			# print subject
 			for gate in self.confusion_dict[subject]:
-				#print gate, "\n"
+				# print gate, "\n"
 				self.matrix = self.confusion_dict[subject][gate]
 				
 				for x in range(25):
@@ -103,8 +106,7 @@ class Workbench:
 		
 		
 	#set up the gui
-	def workbench(self):#, confusion_dict):
-		#self.confusion_dict = confusion_dict
+	def workbench(self):
 		#Primary labels
 		#containment_category = Label(master, text="Containment Category").grid(row=0, column=0)
 		Label(self.master, text="Containment Category").grid(row=0, column=0)
@@ -123,15 +125,14 @@ class Workbench:
 
 		#checkbuttons - containment category 
 		self.var_all =  IntVar()
-		#self.all_cc = 
 		Checkbutton(self.master, text="ALL", variable = self.var_all).grid(row=3,column=0)
 		
 		self.var_all_v = IntVar()
 		self.var_voiced = IntVar()
 		self.var_voiceless = IntVar()
-		self.all_v = Checkbutton(self.master, text="all", variable = self.var_all_v)
-		self.voiced_cc = Checkbutton(self.master, text="Voiced", variable = self.var_voiced)
-		self.voiceless_cc = Checkbutton(self.master, text="Voiceless", variable = self.var_voiceless)
+		Checkbutton(self.master, text="all", variable = self.var_all_v).grid(row=6,column=0)
+		Checkbutton(self.master, text="Voiced", variable = self.var_voiced).grid(row=7,column= 0)
+		Checkbutton(self.master, text="Voiceless", variable = self.var_voiceless).grid(row=8,column=0)
 
 		self.var_all_m = IntVar()
 		self.var_stop = IntVar()
@@ -140,13 +141,13 @@ class Workbench:
 		self.var_nasal = IntVar()
 		self.var_glide = IntVar()
 		self.var_liquid = IntVar()
-		self.all_m = Checkbutton(self.master, text="all", variable = self.var_all_m)
-		self.stop_cc = Checkbutton(self.master, text="Stop", variable = self.var_stop)
-		self.fricative_cc = Checkbutton(self.master, text="Fricative", variable = self.var_fricative)
-		self.affricate_cc = Checkbutton(self.master, text="Affricate", variable = self.var_affricate)
-		self.nasal_cc = Checkbutton(self.master, text="Nasal", variable = self.var_nasal)
-		self.glide_cc = Checkbutton(self.master, text="Glide", variable = self.var_glide)
-		self.liquid_cc = Checkbutton(self.master, text="Liquid", variable = self.var_liquid)
+		Checkbutton(self.master, text="all", variable = self.var_all_m).grid(row=11,column=0)
+		Checkbutton(self.master, text="Stop", variable = self.var_stop).grid(row=12,column=0)
+		Checkbutton(self.master, text="Fricative", variable = self.var_fricative).grid(row=13,column=0)
+		Checkbutton(self.master, text="Affricate", variable = self.var_affricate).grid(row=14,column=0)
+		Checkbutton(self.master, text="Nasal", variable = self.var_nasal).grid(row=15,column=0)
+		Checkbutton(self.master, text="Glide", variable = self.var_glide).grid(row=16,column=0)
+		Checkbutton(self.master, text="Liquid", variable = self.var_liquid).grid(row=17,column=0)
 
 		self.var_all_p = IntVar()
 		self.var_labial = IntVar()
@@ -155,47 +156,22 @@ class Workbench:
 		self.var_palatal = IntVar()
 		self.var_velar = IntVar()
 		self.var_glottal = IntVar()
-		self.all_p = Checkbutton(self.master, text="all", variable = self.var_all_p)
-		self.labial_cc = Checkbutton(self.master, text="Labial", variable = self.var_labial)
-		self.dental_cc = Checkbutton(self.master, text="Dental", variable = self.var_dental)
-		self.alveolar_cc = Checkbutton(self.master, text="Alveolar", variable = self.var_alveolar)
-		self.palatal_cc = Checkbutton(self.master, text="Palatal", variable = self.var_palatal)
-		self.velar_cc = Checkbutton(self.master, text="Velar", variable = self.var_velar)
-		self.glottal_cc = Checkbutton(self.master, text="Glottal", variable = self.var_glottal)
+		Checkbutton(self.master, text="all", variable = self.var_all_p).grid(row=20,column=0)
+		Checkbutton(self.master, text="Labial", variable = self.var_labial).grid(row=21,column=0)
+		Checkbutton(self.master, text="Dental", variable = self.var_dental).grid(row=22,column=0)
+		Checkbutton(self.master, text="Alveolar", variable = self.var_alveolar).grid(row=23,column=0)
+		Checkbutton(self.master, text="Palatal", variable = self.var_palatal).grid(row=24,column=0)
+		Checkbutton(self.master, text="Velar", variable = self.var_velar).grid(row=25,column=0)
+		Checkbutton(self.master, text="Glottal", variable = self.var_glottal).grid(row=26,column=0)
 
 		#radiobuttons - percent ti variable
 		self.radio_var = StringVar()
-		self._voicing_ti = ttk.Radiobutton(self.master, text="Voicing", variable = self.radio_var, value="voicing")
-		self._manner_ti = ttk.Radiobutton(self.master, text="Manner", variable = self.radio_var, value="manner")
-		self._place_ti = ttk.Radiobutton(self.master, text="Place", variable = self.radio_var, value="place")
-		
-
-		#Checkbutton instantiations
-		#self.all_cc.grid(row=3,column=0)
-		self.all_v.grid(row=6,column=0)
-		self.voiced_cc.grid(row=7,column= 0)
-		self.voiceless_cc.grid(row=8,column=0)
-		self.all_m.grid(row=11,column=0)
-		self.stop_cc.grid(row=12,column=0)
-		self.fricative_cc.grid(row=13,column=0)
-		self.affricate_cc.grid(row=14,column=0)
-		self.nasal_cc.grid(row=15,column=0)
-		self.glide_cc.grid(row=16,column=0)
-		self.liquid_cc.grid(row=17,column=0)
-		self.all_p.grid(row=20,column=0)
-		self.labial_cc.grid(row=21,column=0)
-		self.dental_cc.grid(row=22,column=0)
-		self.alveolar_cc.grid(row=23,column=0)
-		self.palatal_cc.grid(row=24,column=0)
-		self.velar_cc.grid(row=25,column=0)
-		self.glottal_cc.grid(row=26,column=0)
-
-		self._voicing_ti.grid(row=7,column=2)
-		self._manner_ti.grid(row=14,column=2)
-		self._place_ti.grid(row=23,column=2)
+		ttk.Radiobutton(self.master, text="Voicing", variable = self.radio_var, value="voicing").grid(row=7,column=2)
+		ttk.Radiobutton(self.master, text="Manner", variable = self.radio_var, value="manner").grid(row=14,column=2)
+		ttk.Radiobutton(self.master, text="Place", variable = self.radio_var, value="place").grid(row=23,column=2)
 		
 		#establishes buttons and their event bindings
-		self.calculate = Button(self.master, text="Calculate %TI", command = self.new).grid(row=29, column=2, sticky=N+S+E+W)
+		self.calculate = Button(self.master, text="Calculate %TI", command = self.construction).grid(row=29, column=2, sticky=N+S+E+W)
 		self.reset_initial_setup = Button(self.master, text="Return to setup options", command = self.go_home).grid(row=29, column=0, sticky=N+S+E+W)
 		
 		#returns to the initial setup menu if the 'X' button is pressed
@@ -217,19 +193,16 @@ class Workbench:
 		self.prediction_place_correspondence = {0:'lab',1:'pal',2:'alv',3:'dent',4:'dent',5:'vel',6:'glot',7:'pal',8:'vel',9:'alv',10:'lab',11:'alv',12:'vel',13:'lab',14:'pal',15:'alv',16:'pal',17:'alv',18:'dent',19:'dent',20:'lab',21:'pal',22:'alv',23:'pal',24:'vowel',25:'total'}
 		
 		self.input_voicing = {'vd':0,'vless':1}
-		self.input_manner = {'stop':0,'fric':1,'aff':2,'nas':3,'glide':4,'liq':5,'vowel':6}
-		self.input_place = {'lab':0,'dent':1,'alv':2,'pal':3,'vel':4,'glot':5,'vowel':6}
+		self.input_manner = {'stop':0,'fric':1,'aff':2,'nas':3,'glide':4,'liq':5}
+		self.input_place = {'lab':0,'dent':1,'alv':2,'pal':3,'vel':4,'glot':5}
 		
 		self.prediction_voicing = {'vd':0,'vless':1}
-		self.prediction_manner = {'stop':0,'fric':1,'aff':2,'nas':3,'glide':4,'liq':5}
-		self.prediction_place = {'lab':0,'dent':1,'alv':2,'pal':3,'vel':4,'glot':5}
-		
+		self.prediction_manner = {'stop':0,'fric':1,'aff':2,'nas':3,'glide':4,'liq':5,'vowel':6}
+		self.prediction_place = {'lab':0,'dent':1,'alv':2,'pal':3,'vel':4,'glot':5,'vowel':6}
 		
 		self.ti_condition = ""
 		
 	
-		
-		
 	def go_home(self):
 		self.master.destroy()
 		self.master.quit()
