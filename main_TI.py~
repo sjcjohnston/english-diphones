@@ -1,0 +1,190 @@
+import os, sys, re
+from collections import defaultdict
+from os.path import join
+from workshop import Workbench
+
+#collect = __import__( 'retreive_data')
+
+
+
+
+class edit_values:
+
+	def __init__(self):
+		self.new_values = " "
+		self.additional_values = " "		
+		self.removed_values = " "
+	
+	def new(self, blank_list):
+		print "Enter values to be in list with single-space separation, e.g. '1 2 10...', or, as single numbers followed by an [enter] keystroke, e.g. 1 [enter] 2 [enter] ...\n"
+		print "Press a final [enter] when finished to return to initial setup menu.\n"
+		
+		while self.new_values != "":
+			self.new_values = raw_input("")
+			
+			blank_list += self.new_values.split()
+		
+		self.new_values = " "
+		return list(set(blank_list))  #done to ensure no duplication of values
+	
+	def add(self, filled_list):
+		print "Enter multiple values to add with single-space separation, e.g. '1 2 10...', or, as single numbers followed by an [enter] keystroke, e.g. 1 [enter] 2 [enter] ...\n"
+		print "Press a final [enter] when finished to return to initial setup menu.\n"
+			
+		while self.additional_values != "":
+			self.additional_values = raw_input("")
+			
+			filled_list += self.additional_values.split()
+		
+		self.additional_values = " "
+		return list(set(filled_list)) 	#done to ensure no duplication of values
+	
+	def rm(self, filled_list):
+		print "Enter multiple values to remove with single-space separation, e.g. '1 2 10...', or, as single numbers followed by an [enter] keystroke, e.g. 1 [enter] 2 [enter] ...\n"
+		print "Press a final [enter] when finished to return to initial setup menu.\n"
+		
+		while self.removed_values != "":
+			self.removed_values = raw_input("")
+			print filled_list, type(filled_list)
+			for value in self.removed_values.split():
+				try:
+					filled_list.remove(int(value))
+				except ValueError:
+					print 'error'
+					pass
+			print filled_list, type(filled_list)
+		self.removed_values = " "
+		return filled_list
+	
+
+class main:
+	
+	def __init__(self):
+	
+		#establishes initial setup values; assume all subjects, all gates, first segment, and consonants
+		self.subject_list = range(1,29)
+		self.missing_subjects = [6,8,9,13,14,18,19,23]
+		for num in self.missing_subjects:
+			self.subject_list.remove(num)
+			
+		#self.subject_list = self.__subjects
+		
+		#self.__gates = range(1,7)
+		self.gate_list = range(1,7)
+		
+		self.segment = "1"
+		#self.segment = self.__segment
+		
+		self.type = "C"
+		#self.type = self.__type
+		
+		
+	def run(self):
+		#this is the main function calling all others
+		
+		#will obtain user input, which can alter the established initial setup values
+		self.command = "-"
+
+		print "Enter initial setup commands\nPress [enter] to use default values, or submit commands and press [enter] when finished editing values\n"
+
+		first_level = initial_values()
+		first_level.get_input()
+
+		if self.subject_list == self.__subjects:
+				self.subject_list == ["total"]
+
+		if self.gate_list == self.__gates:
+				self.gate_list == ["total"]
+	
+		#import module that extracts data from the confusion matrix excel file
+		collect = __import__('retreive_data')
+		open_excel = collect.open_excel()
+		
+		self.target_sheet = open_excel.identify_sheet(self.segment, self.type)
+
+		self.confusion_dict = open_excel.extract_values(self.target_sheet, self.subject_list, self.gate_list)
+		
+		#import module which acts as the "workbench" for specifying the necessary calculations
+		#workshop = __import__('workshop')
+		a = {'k':1}
+		#workbench = Workbench(self.confusion_dict)
+		workbench = Workbench(a)
+		
+
+		
+		while True:
+			repeat = raw_input("Would you like to run any additional calculations?\nTo return to the initial setup menu, type 'return' and hit [enter]. To exit the program, type 'exit' [enter].\n")
+		
+			if repeat == 'return':
+				self.run()
+			if repeat == 'exit':
+				break
+			else:
+				print "You must enter a valid input."
+		
+		
+		
+	
+	
+class initial_values(main):
+
+	def __init__(self):
+		self.edit = edit_values()
+		pass
+
+	def get_input(self):
+		while main.command != "":
+			
+			main.command = raw_input("")
+			
+			if main.command == "":
+				print "Below are your initial setup values.\n"
+				print "Subjects: {0}\n".format(main.subject_list)
+				print "Gate(s): {0}\n".format(main.gate_list)
+				print "Segment: {0}\n".format(main.segment)
+				print "Type: {0}\n".format(main.type.replace("C","Consonant").replace("V","Vowel"))
+				print "If these are the correct values, press [enter].  Otherwise, type 'return' and press [enter].\n"
+				main.command = raw_input("")
+				continue
+			
+			elif main.command.split()[0].strip() == '-new':
+				if main.command.split()[1].strip() == 'subjects':
+					main.subject_list = sorted([int(i) for i in self.edit.new([])])
+				elif main.command.split()[1].strip() == 'gates':
+					main.gate_list = sorted([int(i) for i in self.edit.new([])])
+				elif main.command.split()[1].strip() == 'segment':
+					main.segment = (self.edit.new([]))[0]
+				elif main.command.split()[1].strip() == 'type':
+					main.type = (self.edit.new([]))[0]
+				# print "Returned to initial setup menu.\n"
+				
+			elif main.command.split()[0].strip() == '-add':
+				if main.command.split()[1].strip() == 'subjects':
+					main.subject_list = sorted([int(i) for i in self.edit.add(main.subject_list)])
+				elif main.command.split()[1].strip() == 'gates':
+					main.gate_list = sorted([int(i) for i in self.edit.add(main.gate_list)])
+			
+			elif main.command.split()[0].strip() == '-rm':
+				if main.command.split()[1].strip() == 'subjects':
+					main.subject_list = self.edit.rm(main.subject_list)
+					print main.subject_list
+				elif main.command.split()[1].strip() == 'gates':
+					print main.gate_list
+					main.gate_list = self.edit.rm(main.gate_list)
+			
+			print "Returned to initial setup menu.  If completed, press [enter]\n"
+					
+			
+	
+			
+
+
+		
+		
+			
+
+	
+
+
+main = main()
+main.run()
