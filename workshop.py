@@ -26,50 +26,52 @@ class Workbench:
 		self.containment = {"vd":0,"vless":0,"stop":0,"fric":0,"aff":0,"glide":0,"liq":0,"nas":0,"lab":0,"dent":0,"alv":0,"pal":0,"vel":0,"glot":0}
 		# print self.var_all.get()
 		
-		while True:
+		# while True:
 			#If using complete confusion matrix, set all field-values to "checked"
-			if self.var_all.get() == 1:
-				for feature in self.containment:
-					self.containment[feature] = 1
+		if self.var_all.get() == 1:
+			for feature in self.containment:
+				self.containment[feature] = 1
 				# print self.containment
-				break
-			if self.var_all_v == 1:
-				self.var_voiced = 1
-				self.var_voiceless = 1
-			if self.var_all_m == 1:
-				self.var_stop = 1
-				self.var_fricative = 1
-				self.var_affricate = 1
-				self.var_nasal = 1
-				self.var_glide = 1
-				self.var_liquid = 1
-			if self.var_all_p == 1:
-				self.var_labial = 1
-				self.var_dental = 1
-				self.var_alveolar = 1
-				self.var_palatal = 1
-				self.var_velar = 1
-				self.var_glottal = 1
-			
+				# break
+			# if self.var_all_v == 1:
+			# 	self.var_voiced = 1
+			# 	self.var_voiceless = 1
+			# if self.var_all_m == 1:
+			# 	self.var_stop = 1
+			# 	self.var_fricative = 1
+			# 	self.var_affricate = 1
+			# 	self.var_nasal = 1
+			# 	self.var_glide = 1
+			# 	self.var_liquid = 1
+			# if self.var_all_p == 1:
+			# 	self.var_labial = 1
+			# 	self.var_dental = 1
+			# 	self.var_alveolar = 1
+			# 	self.var_palatal = 1
+			# 	self.var_velar = 1
+			# 	self.var_glottal = 1
+		else:
 			#set dictionary values according to checked boxes
-			self.containment['vd'] = 1 if self.var_voiced == 1 else 'unchecked'
-			self.containment['vless'] = 1 if self.var_voiceless == 1 else 'unchecked'
-			self.containment['stop'] = 1 if self.var_stop == 1 else 'unchecked'
-			self.containment['fric'] = 1 if self.var_fricative == 1 else 'unchecked'
-			self.containment['aff'] = 1 if self.var_affricate == 1 else 'unchecked'
-			self.containment['nas'] = 1 if self.var_nasal == 1 else 'unchecked'
-			self.containment['glide'] = 1 if self.var_glide == 1 else 'unchecked'
-			self.containment['liq'] = 1 if self.var_liquid == 1 else 'unchecked'
-			self.containment['lab'] = 1 if self.var_labial == 1 else 'unchecked'
-			self.containment['dent'] = 1 if self.var_dental == 1 else 'unchecked'
-			self.containment['alv'] = 1 if self.var_alveolar == 1 else 'unchecked'
-			self.containment['pal'] = 1 if self.var_palatal == 1 else 'unchecked'
-			self.containment['vel'] = 1 if self.var_velar == 1 else 'unchecked'
-			self.containment['glot'] = 1 if self.var_glottal == 1 else 'unchecked'
-			break
+			print self.var_voiced.get()
+			print self.var_glottal.get()
+			self.containment['vd'] = 1 if self.var_voiced.get() == 1 else 'unchecked'
+			self.containment['vless'] = 1 if self.var_voiceless.get() == 1 else 'unchecked'
+			self.containment['stop'] = 1 if self.var_stop.get() == 1 else 'unchecked'
+			self.containment['fric'] = 1 if self.var_fricative.get() == 1 else 'unchecked'
+			self.containment['aff'] = 1 if self.var_affricate.get() == 1 else 'unchecked'
+			self.containment['nas'] = 1 if self.var_nasal.get() == 1 else 'unchecked'
+			self.containment['glide'] = 1 if self.var_glide.get() == 1 else 'unchecked'
+			self.containment['liq'] = 1 if self.var_liquid.get() == 1 else 'unchecked'
+			self.containment['lab'] = 1 if self.var_labial.get() == 1 else 'unchecked'
+			self.containment['dent'] = 1 if self.var_dental.get() == 1 else 'unchecked'
+			self.containment['alv'] = 1 if self.var_alveolar.get() == 1 else 'unchecked'
+			self.containment['pal'] = 1 if self.var_palatal.get() == 1 else 'unchecked'
+			self.containment['vel'] = 1 if self.var_velar.get() == 1 else 'unchecked'
+			self.containment['glot'] = 1 if self.var_glottal.get() == 1 else 'unchecked'
+				# break
 		
 		
-		print self.radio_var.get()
+		# print self.radio_var.get()
 
 		if self.radio_var.get() == "voicing":
 			self.confusion_matrix, self.ti_condition = zeros(shape=(2,2)), 'voicing' 
@@ -78,7 +80,7 @@ class Workbench:
 		elif self.radio_var.get() == "place":
 			self.confusion_matrix, self.ti_condition = zeros(shape=(6,7)), 'place'
 
-		print self.confusion_matrix, self.ti_condition
+		# print self.confusion_matrix, self.ti_condition
 		
 		for subject in self.confusion_dict:
 			# print subject
