@@ -1,7 +1,7 @@
-import math
 import ttk
 from Tkinter import *
 from numpy import zeros
+from Percent_TI import Calculator
 
 
 
@@ -13,47 +13,30 @@ class Workbench:
 		self.confusion_dict = confusion_dict
 		self.master = Tk()
 		self.master.wm_title("Workbench")
-		self.master.geometry("250x625")
+		self.master.geometry("300x450")
 
 		ttk.Separator(self.master, orient=VERTICAL).grid(rowspan=27,column=1,sticky="ns")
 		
+		self.calculated_information = []
+
 		self.toolbox()
+		
+	# def work(self):
 		self.workbench()
+		# return self.calculated_information
 		
 
 	def construction(self):
 	
 		self.containment = {"vd":0,"vless":0,"stop":0,"fric":0,"aff":0,"glide":0,"liq":0,"nas":0,"lab":0,"dent":0,"alv":0,"pal":0,"vel":0,"glot":0}
-		# print self.var_all.get()
-		
-		# while True:
-			#If using complete confusion matrix, set all field-values to "checked"
+
+		#If using complete confusion matrix, set all field-values to "checked"
 		if self.var_all.get() == 1:
 			for feature in self.containment:
 				self.containment[feature] = 1
-				# print self.containment
-				# break
-			# if self.var_all_v == 1:
-			# 	self.var_voiced = 1
-			# 	self.var_voiceless = 1
-			# if self.var_all_m == 1:
-			# 	self.var_stop = 1
-			# 	self.var_fricative = 1
-			# 	self.var_affricate = 1
-			# 	self.var_nasal = 1
-			# 	self.var_glide = 1
-			# 	self.var_liquid = 1
-			# if self.var_all_p == 1:
-			# 	self.var_labial = 1
-			# 	self.var_dental = 1
-			# 	self.var_alveolar = 1
-			# 	self.var_palatal = 1
-			# 	self.var_velar = 1
-			# 	self.var_glottal = 1
+
 		else:
 			#set dictionary values according to checked boxes
-			print self.var_voiced.get()
-			print self.var_glottal.get()
 			self.containment['vd'] = 1 if self.var_voiced.get() == 1 else 'unchecked'
 			self.containment['vless'] = 1 if self.var_voiceless.get() == 1 else 'unchecked'
 			self.containment['stop'] = 1 if self.var_stop.get() == 1 else 'unchecked'
@@ -68,10 +51,7 @@ class Workbench:
 			self.containment['pal'] = 1 if self.var_palatal.get() == 1 else 'unchecked'
 			self.containment['vel'] = 1 if self.var_velar.get() == 1 else 'unchecked'
 			self.containment['glot'] = 1 if self.var_glottal.get() == 1 else 'unchecked'
-				# break
-		
-		
-		# print self.radio_var.get()
+
 
 		if self.radio_var.get() == "voicing":
 			self.confusion_matrix, self.ti_condition = zeros(shape=(2,2)), 'voicing' 
@@ -80,7 +60,7 @@ class Workbench:
 		elif self.radio_var.get() == "place":
 			self.confusion_matrix, self.ti_condition = zeros(shape=(6,7)), 'place'
 
-		# print self.confusion_matrix, self.ti_condition
+
 		
 		for subject in self.confusion_dict:
 			# print subject
@@ -105,7 +85,12 @@ class Workbench:
 					else:
 						continue
 		print self.confusion_matrix
-		
+
+		self.calculate = Calculator(self.confusion_matrix)
+		self.calculate.percent_ti()
+
+		self.calculated_information += ( [i for i,j in self.containment.items() if j==1], self.calculate.blah )
+
 		
 	#set up the gui
 	def workbench(self):
@@ -127,57 +112,76 @@ class Workbench:
 
 		#checkbuttons - containment category 
 		self.var_all =  IntVar()
-		Checkbutton(self.master, text="ALL", variable = self.var_all).grid(row=3,column=0)
+		self.all = Checkbutton(self.master, text="ALL", variable = self.var_all, command=self.deactivate_all).grid(row=3,column=0)
 		
-		self.var_all_v = IntVar()
+		# self.var_all_v = IntVar()
 		self.var_voiced = IntVar()
 		self.var_voiceless = IntVar()
-		Checkbutton(self.master, text="all", variable = self.var_all_v).grid(row=6,column=0)
-		Checkbutton(self.master, text="Voiced", variable = self.var_voiced).grid(row=7,column= 0)
-		Checkbutton(self.master, text="Voiceless", variable = self.var_voiceless).grid(row=8,column=0)
+		# Checkbutton(self.master, text="all", variable = self.var_all_v).grid(row=6,column=0)
+		self.voiced = Checkbutton(self.master, text="Voiced", variable = self.var_voiced, command=self.selectall_nonvoice)
+		self.voiced.grid(row=7,column= 0)
+		self.voiceless = Checkbutton(self.master, text="Voiceless", variable = self.var_voiceless, command=self.selectall_nonvoice)
+		self.voiceless.grid(row=8,column=0)
 
-		self.var_all_m = IntVar()
+		# self.var_all_m = IntVar()
 		self.var_stop = IntVar()
 		self.var_fricative = IntVar()
 		self.var_affricate = IntVar()
 		self.var_nasal = IntVar()
 		self.var_glide = IntVar()
 		self.var_liquid = IntVar()
-		Checkbutton(self.master, text="all", variable = self.var_all_m).grid(row=11,column=0)
-		Checkbutton(self.master, text="Stop", variable = self.var_stop).grid(row=12,column=0)
-		Checkbutton(self.master, text="Fricative", variable = self.var_fricative).grid(row=13,column=0)
-		Checkbutton(self.master, text="Affricate", variable = self.var_affricate).grid(row=14,column=0)
-		Checkbutton(self.master, text="Nasal", variable = self.var_nasal).grid(row=15,column=0)
-		Checkbutton(self.master, text="Glide", variable = self.var_glide).grid(row=16,column=0)
-		Checkbutton(self.master, text="Liquid", variable = self.var_liquid).grid(row=17,column=0)
+		# Checkbutton(self.master, text="all", variable = self.var_all_m).grid(row=11,column=0)
+		self.stop = Checkbutton(self.master, text="Stop", variable = self.var_stop, command=self.selectall_nonmanner)
+		self.stop.grid(row=12,column=0)
+		self.fricative = Checkbutton(self.master, text="Fricative", variable = self.var_fricative, command=self.selectall_nonmanner)
+		self.fricative.grid(row=13,column=0)
+		self.affricate = Checkbutton(self.master, text="Affricate", variable = self.var_affricate, command=self.selectall_nonmanner)
+		self.affricate.grid(row=14,column=0)
+		self.nasal = Checkbutton(self.master, text="Nasal", variable = self.var_nasal, command=self.selectall_nonmanner)
+		self.nasal.grid(row=15,column=0)
+		self.glide = Checkbutton(self.master, text="Glide", variable = self.var_glide, command=self.selectall_nonmanner)
+		self.glide.grid(row=16,column=0)
+		self.liquid = Checkbutton(self.master, text="Liquid", variable = self.var_liquid, command=self.selectall_nonmanner)
+		self.liquid.grid(row=17,column=0)
 
-		self.var_all_p = IntVar()
+		# self.var_all_p = IntVar()
 		self.var_labial = IntVar()
 		self.var_dental = IntVar()
 		self.var_alveolar = IntVar()
 		self.var_palatal = IntVar()
 		self.var_velar = IntVar()
 		self.var_glottal = IntVar()
-		Checkbutton(self.master, text="all", variable = self.var_all_p).grid(row=20,column=0)
-		Checkbutton(self.master, text="Labial", variable = self.var_labial).grid(row=21,column=0)
-		Checkbutton(self.master, text="Dental", variable = self.var_dental).grid(row=22,column=0)
-		Checkbutton(self.master, text="Alveolar", variable = self.var_alveolar).grid(row=23,column=0)
-		Checkbutton(self.master, text="Palatal", variable = self.var_palatal).grid(row=24,column=0)
-		Checkbutton(self.master, text="Velar", variable = self.var_velar).grid(row=25,column=0)
-		Checkbutton(self.master, text="Glottal", variable = self.var_glottal).grid(row=26,column=0)
+		# Checkbutton(self.master, text="all", variable = self.var_all_p).grid(row=20,column=0)
+		self.labial = Checkbutton(self.master, text="Labial", variable = self.var_labial, command=self.selectall_nonplace)
+		self.labial.grid(row=21,column=0)
+		self.dental = Checkbutton(self.master, text="Dental", variable = self.var_dental, command=self.selectall_nonplace)
+		self.dental.grid(row=22,column=0)
+		self.alveolar = Checkbutton(self.master, text="Alveolar", variable = self.var_alveolar, command=self.selectall_nonplace)
+		self.alveolar.grid(row=23,column=0)
+		self.palatal = Checkbutton(self.master, text="Palatal", variable = self.var_palatal, command=self.selectall_nonplace)
+		self.palatal.grid(row=24,column=0)
+		self.velar = Checkbutton(self.master, text="Velar", variable = self.var_velar, command=self.selectall_nonplace)
+		self.velar.grid(row=25,column=0)
+		self.glottal = Checkbutton(self.master, text="Glottal", variable = self.var_glottal, command=self.selectall_nonplace)
+		self.glottal.grid(row=26,column=0)
+
+		#checkbutton lists
+		self.voice_set = set([self.voiced,self.voiceless])
+		self.manner_set = set([self.stop,self.fricative,self.affricate,self.nasal,self.glide,self.liquid])
+		self.place_set = set([self.labial,self.dental,self.alveolar,self.palatal,self.velar,self.glottal])
 
 		#radiobuttons - percent ti variable
-		self.radio_var = StringVar()
+		self.radio_var = StringVar(value="voicing")
 		ttk.Radiobutton(self.master, text="Voicing", variable = self.radio_var, value="voicing").grid(row=7,column=2)
 		ttk.Radiobutton(self.master, text="Manner", variable = self.radio_var, value="manner").grid(row=14,column=2)
 		ttk.Radiobutton(self.master, text="Place", variable = self.radio_var, value="place").grid(row=23,column=2)
-		
+
 		#establishes buttons and their event bindings
 		self.calculate = Button(self.master, text="Calculate %TI", command = self.construction).grid(row=29, column=2, sticky=N+S+E+W)
 		self.reset_initial_setup = Button(self.master, text="Return to setup options", command = self.go_home).grid(row=29, column=0, sticky=N+S+E+W)
 		
 		#returns to the initial setup menu if the 'X' button is pressed
-		self.master.protocol('WM_DELETE_WINDOW', self.exit_override)
+		self.master.protocol('WM_DELETE_WINDOW', self.go_home)
 		
 		#Instantiate the window
 		mainloop()
@@ -204,14 +208,81 @@ class Workbench:
 		
 		self.ti_condition = ""
 		
-	
+	def selectall_nonvoice(self):
+		if self.var_voiced.get() == 1 or self.var_voiceless.get() == 1:
+			for feature in self.manner_set:
+				feature.select()
+				feature.configure(state='disable', disabledforeground='gray')
+			for feature in self.place_set:
+				feature.select()
+				feature.configure(state='disable', disabledforeground='gray')
+		if self.var_voiced.get() == 0 and self.var_voiceless.get() == 0:
+			for feature in self.manner_set:
+				feature.deselect()
+				feature.configure(state='normal', disabledforeground='black')
+			for feature in self.place_set:
+				feature.deselect()
+				feature.configure(state='normal', disabledforeground='black')
+
+	def selectall_nonmanner(self):
+		if self.var_stop.get() == 1 or self.var_fricative.get() == 1 or self.var_affricate.get() == 1 or self.var_nasal.get() == 1 or self.var_glide.get() == 1 or self.var_liquid.get() == 1:
+			for feature in self.voice_set:
+				feature.select()
+				feature.configure(state='disable', disabledforeground='gray')
+			for feature in self.place_set:
+				feature.select()
+				feature.configure(state='disable', disabledforeground='gray')
+		if self.var_stop.get() == 0 and self.var_fricative.get() == 0 and self.var_affricate.get() == 0 and self.var_nasal.get() == 0 and self.var_glide.get() == 0 and self.var_liquid.get() == 0:
+			for feature in self.voice_set:
+				feature.deselect()
+				feature.configure(state='normal', disabledforeground='black')
+			for feature in self.place_set:
+				feature.deselect()
+				feature.configure(state='normal', disabledforeground='black')
+
+
+	def selectall_nonplace(self):
+		if self.var_labial.get() == 1 or self.var_dental.get() == 1 or self.var_alveolar.get() == 1 or self.var_palatal.get() == 1 or self.var_velar.get() == 1 or self.var_glottal.get() == 1:
+			for feature in self.voice_set:
+				feature.select()
+				feature.configure(state='disable', disabledforeground='gray')
+			for feature in self.manner_set:
+				feature.select()
+				feature.configure(state='disable', disabledforeground='gray')
+		if self.var_labial.get() == 0 and self.var_dental.get() == 0 and self.var_alveolar.get() == 0 and self.var_palatal.get() == 0 and self.var_velar.get() == 0 and self.var_glottal.get() == 0:
+			for feature in self.voice_set:
+				feature.deselect()
+				feature.configure(state='normal', disabledforeground='black')
+			for feature in self.manner_set:
+				feature.deselect()
+				feature.configure(state='normal', disabledforeground='black')
+
+
+	def deactivate_all(self):
+		if self.var_all.get() == 1:
+			for feature in self.voice_set:
+				feature.configure(state='disabled', disabledforeground='gray')
+			for feature in self.manner_set:
+				feature.configure(state='disabled', disabledforeground='gray')
+			for feature in self.place_set:
+				feature.configure(state='disabled', disabledforeground='gray')
+		elif self.var_all.get() == 0:
+			for feature in self.voice_set:
+				feature.configure(state='normal', disabledforeground='black')
+			for feature in self.manner_set:
+				feature.configure(state='normal', disabledforeground='black')
+			for feature in self.place_set:
+				feature.configure(state='normal', disabledforeground='black')
+
+
 	def go_home(self):
 		self.master.destroy()
 		self.master.quit()
+
 		
-	def exit_override(self):
-		self.master.destroy()
-		self.master.quit()
+	# def exit_override(self):
+	# 	self.master.destroy()
+	# 	self.master.quit()
 
 if __name__ == '__main__':
 	a = {'k':1}

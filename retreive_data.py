@@ -89,3 +89,13 @@ class ExcelReader:
 		return confusion_matrix
 	
 		
+class SetOutputPath:
+	
+	def __init__(self):
+		print "Please identify the location and name you would like to use for the output file."
+
+	def specify_file(self):
+		self.root = Tk()
+		self.project_name = asksaveasfilename(filetypes=[('Text File','.txt')])
+		
+		return self.project_name

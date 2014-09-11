@@ -1,16 +1,21 @@
-import os, sys, re
+import os, sys, re, globals
 from collections import defaultdict
 from os.path import join
 from workshop import Workbench
-from retreive_data import ExcelReader
+from retreive_data import ExcelReader, SetOutputPath
+from Percent_TI import Calculator
+from display_case import DisplayShelf
+
 
 
 class Edit_Values:
 
 	def __init__(self):
+
 		self.new_values = " "
 		self.additional_values = " "		
 		self.removed_values = " "
+		globals.init()
 	
 	def new(self, blank_list):
 		print "Enter values to be in list with single-space separation, e.g. '1 2 10...', or, as single numbers followed by an [enter] keystroke, e.g. 1 [enter] 2 [enter] ...\n"
@@ -95,6 +100,10 @@ class Not_Main:
 
 		#import module which acts as the "workbench" for specifying the necessary calculations
 		workbench = Workbench(self.confusion_dict)
+
+		# stuff = workbench.work()
+
+		print workbench.calculated_information
 	
 		while True:
 			repeat = raw_input("Would you like to run any additional calculations?\nTo return to the initial setup menu, type 'return' and hit [enter]. To exit the program, type 'exit' [enter].\n")
