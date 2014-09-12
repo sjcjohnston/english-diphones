@@ -1,0 +1,82 @@
+PERCENT TRANSFERRED INFORMATION
+
+Subjects:	[1]
+Gates:	[1]
+Segment:	1
+Type:	C
+Constraints:	['No Constraints']
+Category Tested:	voicing
+T-value:	-0.698341694544
+H-value:	-0.929490907667
+Percent_TI-value:	0.751316326801
+
+Subjects:	[1]
+Gates:	[1]
+Segment:	1
+Type:	C
+Constraints:	['No Constraints']
+Category Tested:	manner
+T-value:	-1.45250070643
+H-value:	-2.22353591929
+Percent_TI-value:	0.653239146635
+
+Subjects:	[1]
+Gates:	[1]
+Segment:	1
+Type:	C
+Constraints:	['No Constraints']
+Category Tested:	place
+T-value:	-1.2782752409
+H-value:	-2.31980715942
+Percent_TI-value:	0.551026509127
+
+Subjects:	[1, 2, 3, 4, 5, 7, 10, 11, 12, 15, 16, 17, 20, 21, 22, 24, 25, 26, 27, 28]
+Gates:	[1, 2, 3, 4, 5, 6]
+Segment:	1
+Type:	C
+Constraints:	['No Constraints']
+Category Tested:	voicing
+T-value:	-0.000227853357452
+H-value:	-0.0903412997076
+Percent_TI-value:	0.00252213946655
+
+Subjects:	[1, 2, 3, 4, 5, 7, 10, 11, 12, 15, 16, 17, 20, 21, 22, 24, 25, 26, 27, 28]
+Gates:	[1, 2, 3, 4, 5, 6]
+Segment:	1
+Type:	C
+Constraints:	['No Constraints']
+Category Tested:	manner
+T-value:	-0.000383024787489
+H-value:	-0.106449743836
+Percent_TI-value:	0.00359817481647
+
+Subjects:	[1, 2, 3, 4, 5, 7, 10, 11, 12, 15, 16, 17, 20, 21, 22, 24, 25, 26, 27, 28]
+Gates:	[1, 2, 3, 4, 5, 6]
+Segment:	1
+Type:	C
+Constraints:	['No Constraints']
+Category Tested:	place
+T-value:	-0.000347177155613
+H-value:	-0.107648141016
+Percent_TI-value:	0.00322511055311
+
+Subjects:	[1, 2, 3, 4, 5, 7, 10, 11, 12, 15, 16, 17, 20, 21, 22, 24, 25, 26, 27, 28]
+Gates:	[1, 2, 3, 4, 5, 6]
+Segment:	1
+Type:	C
+Constraints:	['stop']
+Category Tested:	place
+T-value:	-0.000313912486887
+H-value:	-0.0983877197153
+Percent_TI-value:	0.00319056573112
+
+Subjects:	[1, 2, 3, 4, 5, 7, 10, 11, 12, 15, 16, 17, 20, 21, 22, 24, 25, 26, 27, 28]
+Gates:	[1, 2, 3, 4, 5, 6]
+Segment:	1
+Type:	C
+Constraints:	['lab']
+Category Tested:	manner
+T-value:	-0.000368653106093
+H-value:	-0.101918203408
+Percent_TI-value:	0.00361714682723
+

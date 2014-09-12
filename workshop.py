@@ -21,9 +21,7 @@ class Workbench:
 
 		self.toolbox()
 		
-	# def work(self):
 		self.workbench()
-		# return self.calculated_information
 		
 
 	def construction(self):
@@ -52,25 +50,19 @@ class Workbench:
 			self.containment['vel'] = 1 if self.var_velar.get() == 1 else 'unchecked'
 			self.containment['glot'] = 1 if self.var_glottal.get() == 1 else 'unchecked'
 
-
 		if self.radio_var.get() == "voicing":
-			self.confusion_matrix, self.ti_condition = zeros(shape=(2,2)), 'voicing' 
+			self.confusion_matrix, self.ti_condition = zeros(shape=(3,3)), 'voicing' 
 		elif self.radio_var.get() == "manner":
-			self.confusion_matrix, self.ti_condition = zeros(shape=(6,7)), 'manner' 
+			self.confusion_matrix, self.ti_condition = zeros(shape=(7,8)), 'manner' 
 		elif self.radio_var.get() == "place":
-			self.confusion_matrix, self.ti_condition = zeros(shape=(6,7)), 'place'
-
-
+			self.confusion_matrix, self.ti_condition = zeros(shape=(7,8)), 'place'
 		
 		for subject in self.confusion_dict:
-			# print subject
 			for gate in self.confusion_dict[subject]:
-				# print gate, "\n"
 				self.matrix = self.confusion_dict[subject][gate]
 				
 				for x in range(25):
 					#check if the sound was selected - if so, check the ti_condition
-					#print x, self.containment[self.input_voice_correspondence[x]], self.containment[self.input_manner_correspondence[x]], self.containment[self.input_place_correspondence[x]]
 					if self.containment[self.input_voice_correspondence[x]] == 1 and self.containment[self.input_manner_correspondence[x]] == 1 and self.containment[self.input_place_correspondence[x]] == 1:
 						for y in range(25):
 							#extract value from the input confusion matrix
@@ -81,15 +73,47 @@ class Workbench:
 								self.confusion_matrix[self.input_manner[self.input_manner_correspondence[x]],self.prediction_manner[self.prediction_manner_correspondence[y]]] += val
 							if self.ti_condition == 'place':
 								self.confusion_matrix[self.input_place[self.input_place_correspondence[x]],self.prediction_place[self.prediction_place_correspondence[y]]] += val
-								
 					else:
 						continue
-		print self.confusion_matrix
+				#sum row/col totals
+				num_of_cols = len(self.confusion_matrix[1])
+				for i in range(num_of_cols):
+					col_total = 0
+					for j in range(len(self.confusion_matrix)):
+						if i == 0:
+							self.confusion_matrix[j,num_of_cols-1] = sum(self.confusion_matrix[j])
+						col_total += self.confusion_matrix[j,i]
+					self.confusion_matrix[j,i] = col_total
 
 		self.calculate = Calculator(self.confusion_matrix)
 		self.calculate.percent_ti()
 
-		self.calculated_information += ( [i for i,j in self.containment.items() if j==1], self.calculate.blah )
+		self.selected_categories = []
+		
+		#create the list of constraint features (e.g., if only "palatal" were checked, only "palatal" would be in this list)
+		print [i for i,j in self.containment.items() if j=='unchecked']
+		for k in [i for i,j in self.containment.items() if j=='unchecked']:
+			if k in self.voice_list:
+				self.selected_categories += self.voice_list
+				for i in [i for i,j in self.containment.items() if j=='unchecked' and i in self.voice_list]:
+					self.selected_categories .remove(i)
+				break
+			if k in self.manner_list:
+				self.selected_categories += self.manner_list
+				for i in [i for i,j in self.containment.items() if j=='unchecked' and i in self.manner_list]:
+					self.selected_categories.remove(i)
+				break
+			if k in self.place_list:
+				self.selected_categories = self.place_list
+				for i in [i for i,j in self.containment.items() if j=='unchecked' and i in self.place_list]:
+					self.selected_categories.remove(i)
+				break
+		if self.selected_categories == []:
+			self.selected_categories = ["No Constraints"]
+
+		self.packaged_info = (self.selected_categories, self.radio_var.get() , self.calculate.final_values)
+
+		self.calculated_information.append(self.packaged_info)
 
 		
 	#set up the gui
@@ -191,12 +215,12 @@ class Workbench:
 		#1b, 2ch, 3d,4 dh, 5f, 6F, 7g, 8h, 9j, 10k, 11l, 12m, 13n, 14ng, 15p, 16r, 17s, 18sh, 19t, 20th, 21v, 22w, 23y, 24z, 25zh, 26'total'
 		self.input_voice_correspondence = {0:'vd',1:'vless',2:'vd',3:'vd',4:'vless',5:'vd',6:'vd',7:'vless',8:'vd',9:'vless',10:'vd',11:'vd',12:'vd',13:'vd',14:'vless',15:'vd',16:'vless',17:'vless',18:'vless',19:'vless',20:'vd',21:'vd',22:'vd',23:'vd',24:'vd',25:'total'}
 		self.input_manner_correspondence = {0:'stop',1:'aff',2:'stop',3:'fric',4:'fric',5:'stop',6:'stop',7:'fric',8:'aff',9:'stop',10:'liq',11:'nas',12:'nas',13:'nas',14:'stop',15:'liq',16:'fric',17:'fric',18:'stop',19:'fric',20:'fric',21:'glide',22:'glide',23:'fric',24:'fric',25:'total'}
-		self.input_place_correspondence = {0:'lab',1:'pal',2:'alv',3:'dent',4:'dent',5:'alv',6:'vel',7:'glot',8:'pal',9:'vel',10:'alv',11:'lab',12:'alv',13:'vel',14:'lab',15:'pal',16:'alv',17:'pal',18:'alv',19:'dent',20:'dent',21:'lab',22:'pal',23:'alv',24:'pal',25:'total'}
+		self.input_place_correspondence = {0:'lab',1:'pal',2:'alv',3:'dent',4:'lab',5:'alv',6:'vel',7:'glot',8:'pal',9:'vel',10:'alv',11:'lab',12:'alv',13:'vel',14:'lab',15:'pal',16:'alv',17:'pal',18:'alv',19:'dent',20:'lab',21:'lab',22:'pal',23:'alv',24:'pal',25:'total'}
 		
 		#1b, 2ch, 3d, 4dh, 5f, 6g, 7h, 8j, 9k, 10 l, 11m,12n, 13ng, 14p, 15r, 16s, 17sh, 18t, 19th, 20v, 21w, 22y, 23z, 24zh, 25Voc, 26'total'
 		self.prediction_voice_correspondence = {0:'vd',1:'vless',2:'vd',3:'vd',4:'vless',5:'vd',6:'vless',7:'vd',8:'vless',9:'vd',10:'vd',11:'vd',12:'vd',13:'vless',14:'vd',15:'vless',16:'vless',17:'vless',18:'vless',19:'vd',20:'vd',21:'vd',22:'vd',23:'vd',24:'vd',25:'total'}
 		self.prediction_manner_correspondence = {0:'stop',1:'aff',2:'stop',3:'fric',4:'fric',5:'stop',6:'fric',7:'aff',8:'stop',9:'liq',10:'nas',11:'nas',12:'nas',13:'stop',14:'liq',15:'fric',16:'fric',17:'stop',18:'fric',19:'fric',20:'glide',21:'glide',22:'fric',23:'fric',24:'vowel',25:'total'}
-		self.prediction_place_correspondence = {0:'lab',1:'pal',2:'alv',3:'dent',4:'dent',5:'vel',6:'glot',7:'pal',8:'vel',9:'alv',10:'lab',11:'alv',12:'vel',13:'lab',14:'pal',15:'alv',16:'pal',17:'alv',18:'dent',19:'dent',20:'lab',21:'pal',22:'alv',23:'pal',24:'vowel',25:'total'}
+		self.prediction_place_correspondence = {0:'lab',1:'pal',2:'alv',3:'dent',4:'lab',5:'vel',6:'glot',7:'pal',8:'vel',9:'alv',10:'lab',11:'alv',12:'vel',13:'lab',14:'pal',15:'alv',16:'pal',17:'alv',18:'dent',19:'lab',20:'lab',21:'pal',22:'alv',23:'pal',24:'vowel',25:'total'}
 		
 		self.input_voicing = {'vd':0,'vless':1}
 		self.input_manner = {'stop':0,'fric':1,'aff':2,'nas':3,'glide':4,'liq':5}
@@ -205,6 +229,10 @@ class Workbench:
 		self.prediction_voicing = {'vd':0,'vless':1}
 		self.prediction_manner = {'stop':0,'fric':1,'aff':2,'nas':3,'glide':4,'liq':5,'vowel':6}
 		self.prediction_place = {'lab':0,'dent':1,'alv':2,'pal':3,'vel':4,'glot':5,'vowel':6}
+
+		self.voice_list = ["vd","vless"]
+		self.manner_list = ["stop","fric","aff","nas","glide","liq"]
+		self.place_list = ["lab","dent","alv","pal","vel","glot"]
 		
 		self.ti_condition = ""
 		
@@ -279,11 +307,3 @@ class Workbench:
 		self.master.destroy()
 		self.master.quit()
 
-		
-	# def exit_override(self):
-	# 	self.master.destroy()
-	# 	self.master.quit()
-
-if __name__ == '__main__':
-	a = {'k':1}
-	Workbench(a)

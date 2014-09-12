@@ -96,6 +96,7 @@ class SetOutputPath:
 
 	def specify_file(self):
 		self.root = Tk()
+		self.root.withdraw()
 		self.project_name = asksaveasfilename(filetypes=[('Text File','.txt')])
-		
+
 		return self.project_name

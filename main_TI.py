@@ -1,4 +1,4 @@
-import os, sys, re, globals
+import os, sys, re, globs
 from collections import defaultdict
 from os.path import join
 from workshop import Workbench
@@ -6,7 +6,8 @@ from retreive_data import ExcelReader, SetOutputPath
 from Percent_TI import Calculator
 from display_case import DisplayShelf
 
-
+globs.init()
+display_shelf = DisplayShelf()
 
 class Edit_Values:
 
@@ -15,7 +16,6 @@ class Edit_Values:
 		self.new_values = " "
 		self.additional_values = " "		
 		self.removed_values = " "
-		globals.init()
 	
 	def new(self, blank_list):
 		print "Enter values to be in list with single-space separation, e.g. '1 2 10...', or, as single numbers followed by an [enter] keystroke, e.g. 1 [enter] 2 [enter] ...\n"
@@ -76,6 +76,8 @@ class Not_Main:
 		
 		self.type = "C"
 
+		
+
 		self.edit = Edit_Values()
 
 		
@@ -101,16 +103,17 @@ class Not_Main:
 		#import module which acts as the "workbench" for specifying the necessary calculations
 		workbench = Workbench(self.confusion_dict)
 
-		# stuff = workbench.work()
 
-		print workbench.calculated_information
+		for calculation in workbench.calculated_information:
+			display_shelf.append_to_project(self.subject_list, self.gate_list, self.segment, self.type, calculation)
 	
 		while True:
 			repeat = raw_input("Would you like to run any additional calculations?\nTo return to the initial setup menu, type 'return' and hit [enter]. To exit the program, type 'exit' [enter].\n")
 		
-			if repeat == 'return':
+			if repeat.strip() == 'return':
 				self.run()
-			if repeat == 'exit':
+			if repeat.strip() == 'exit':
+				display_shelf.store()
 				break
 			else:
 				print "You must enter a valid input."
@@ -123,12 +126,14 @@ class Not_Main:
 			
 			if self.command == "":
 				print "Below are your initial setup values.\n"
-				print "Subjects: {0}\n".format(self.subject_list)
+				print "Subject(s): {0}\n".format(self.subject_list)
 				print "Gate(s): {0}\n".format(self.gate_list)
 				print "Segment: {0}\n".format(self.segment)
 				print "Type: {0}\n".format(self.type.replace("C","Consonant").replace("V","Vowel"))
 				print "If these are the correct values, press [enter].  Otherwise, type 'return' and press [enter].\n"
 				self.command = raw_input("")
+				if self.command.strip() == "return":
+					print "Returned; enter commands\n" 
 				continue
 			
 			elif self.command.split()[0].strip() == '-new':
@@ -140,7 +145,6 @@ class Not_Main:
 					self.segment = (self.edit.new([]))[0]
 				elif self.command.split()[1].strip() == 'type':
 					self.type = (self.edit.new([]))[0]
-				# print "Returned to initial setup menu.\n"
 				
 			elif self.command.split()[0].strip() == '-add':
 				if self.command.split()[1].strip() == 'subjects':
@@ -161,4 +165,8 @@ class Not_Main:
 
 
 Not_Main = Not_Main()
-Not_Main.run()
+try:
+	Not_Main.run()
+except Exception as e:
+	print e
+	display_shelf.store()
